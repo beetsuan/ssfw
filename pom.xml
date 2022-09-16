@@ -30,6 +30,7 @@
         <jakarta.json.version>2.1.0</jakarta.json.version>
         <mica-auto.version>2.3.1</mica-auto.version>
         <mybatis-plus.version>3.5.2</mybatis-plus.version>
+        <yauaa.version>7.5.0</yauaa.version>
     </properties>
 
     <dependencies>
@@ -43,10 +44,10 @@
             <artifactId>spring-boot-starter</artifactId>
             <exclusions>
                 <!--过滤log4j，项目采用logback-->
-                <exclusion>
+                <!--<exclusion>
                     <groupId>org.apache.logging.log4j</groupId>
                     <artifactId>log4j-to-slf4j</artifactId>
-                </exclusion>
+                </exclusion>-->
             </exclusions>
         </dependency>
 
@@ -140,6 +141,13 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+
+        <!--useragent解析-->
+        <dependency>
+            <groupId>nl.basjes.parse.useragent</groupId>
+            <artifactId>yauaa</artifactId>
+            <version>${yauaa.version}</version>
         </dependency>
 
         <dependency>

@@ -1,4 +1,4 @@
-package com.ssfw.common.util;
+package com.ssfw.common.util.encrypt;
 
 import lombok.SneakyThrows;
 
@@ -23,8 +23,6 @@ import java.util.Map;
  * 非对称加密算法可以用来对对称加密的密钥加密，这样保证密钥的安全也就保证了数据的安全
  * </p>
  *
- * @Description: <br>
- * @Project: INMR.CORE <br>
  * @date 4/2/2019 12:01 <br>
  * @author <a href="a@hotmail.com">a</a>
  */
@@ -50,8 +48,7 @@ public class RsaUtil {
      *
      * @param data       加密数据
      * @param privateKey 私钥
-     * @return
-     * @throws Exception
+     * @return 数字签名
      */
     public static String sign(byte[] data, String privateKey) throws Exception {
         // 解密由base64编码的私钥
@@ -76,7 +73,6 @@ public class RsaUtil {
      * @param publicKey 公钥
      * @param sign      数字签名
      * @return 校验成功返回true 失败返回false
-     * @throws Exception
      */
     public static boolean verify(byte[] data, String publicKey, String sign)
             throws Exception {
@@ -112,10 +108,9 @@ public class RsaUtil {
      * 解密<br>
      * 用私钥解密
      *
-     * @param data
-     * @param key
-     * @return
-     * @throws Exception
+     * @param data String
+     * @param key 私钥
+     * @return 明文byte
      */
     public static byte[] decryptByPrivateKey(String data, String key)
             throws Exception {
@@ -126,10 +121,9 @@ public class RsaUtil {
      * 解密<br>
      * 用公钥解密
      *
-     * @param data
-     * @param key
-     * @return
-     * @throws Exception
+     * @param data byte密文
+     * @param key 公钥
+     * @return byte明文
      */
     public static byte[] decryptByPublicKey(byte[] data, String key)
             throws Exception {
@@ -149,10 +143,9 @@ public class RsaUtil {
      * 加密<br>
      * 用公钥加密
      *
-     * @param data
-     * @param key
-     * @return
-     * @throws Exception
+     * @param data 明文
+     * @param key 公钥
+     * @return 密文
      */
     public static byte[] encryptByPublicKey(String data, String key)
             throws Exception {
@@ -172,10 +165,9 @@ public class RsaUtil {
      * 加密<br>
      * 用私钥加密
      *
-     * @param data
-     * @param key
-     * @return
-     * @throws Exception
+     * @param data byte明文
+     * @param key 私钥
+     * @return byte密文
      */
     public static byte[] encryptByPrivateKey(byte[] data, String key)
             throws Exception {
@@ -194,25 +186,21 @@ public class RsaUtil {
     /**
      * 取得私钥
      *
-     * @param keyMap
-     * @return
-     * @throws Exception
+     * @param keyMap 密码对
+     * @return 私钥
      */
-    public static String getPrivateKey(Map<String, Key> keyMap)
-            throws Exception {
-        Key key = (Key) keyMap.get(PRIVATE_KEY);
+    public static String getPrivateKey(Map<String, Key> keyMap) {
+        Key key = keyMap.get(PRIVATE_KEY);
         return encryptBase64(key.getEncoded());
     }
 
     /**
      * 取得公钥
      *
-     * @param keyMap
-     * @return
-     * @throws Exception
+     * @param keyMap 密码对
+     * @return 公钥
      */
-    public static String getPublicKey(Map<String, Key> keyMap)
-            throws Exception {
+    public static String getPublicKey(Map<String, Key> keyMap) {
         Key key = keyMap.get(PUBLIC_KEY);
         return encryptBase64(key.getEncoded());
     }
@@ -220,7 +208,7 @@ public class RsaUtil {
     /**
      * 初始化密钥
      *
-     * @return map
+     * @return 密钥对
      */
     @SneakyThrows
     public static Map<String, Key> initKey() {

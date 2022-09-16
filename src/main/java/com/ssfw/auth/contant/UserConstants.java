@@ -14,6 +14,9 @@ public class UserConstants {
 	/** 用户登录密码 */
 	public final static String LOGIN_PASSWORD = "password";
 
+	/**用户验证码*/
+	public static final String SESSION_SECURITY_CAPTCHA = "captcha";
+
 	/** 租户id session */
 	public final static String SESSION_TENANT_ID = "currentSessionTenantID";
 

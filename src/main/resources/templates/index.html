@@ -5,6 +5,7 @@
     <title>首页</title>
 </head>
 <body>
- 首页 欢迎，<th:block th:text="${nickname}"></th:block>
+ 首页 欢迎，<th:block th:text="${#session.getAttribute('currentSessionNickName')}"></th:block>
+<a href="/logout">登出</a>
 </body>
 </html>

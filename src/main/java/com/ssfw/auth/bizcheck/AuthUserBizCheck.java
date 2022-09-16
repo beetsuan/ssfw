@@ -28,9 +28,8 @@ public class AuthUserBizCheck extends BaseBizCheck<UserEntity> {
 
         LambdaQueryWrapper<UserEntity> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(UserEntity::getUsername, model.getUsername());
-        wrapper.eq(UserEntity::getTenantId, model.getTenantId());
         if (!authUserService.list(wrapper).isEmpty()) {
-            addError("用户名重复");
+            addError("用户名["+model.getUsername()+"]已被使用");
         }
 
         return this;
@@ -55,9 +54,15 @@ public class AuthUserBizCheck extends BaseBizCheck<UserEntity> {
         required(model.getUsername(),"用户名");
         required(model.getPassword(),"用户密码");
 
-        if (authUserService.getById(model.getUserId()) == null) {
+        UserEntity dbEntity = authUserService.getById(model.getUserId());
+        if (dbEntity == null) {
             addError("用户ID:",model.getUserId(),"无效");
+            return this;
         }
+        model.setUsername(dbEntity.getUsername());
+        model.setCreateUser(dbEntity.getCreateUser());
+        model.setCreateDate(dbEntity.getCreateDate());
+
 
         return this;
     }

@@ -24,6 +24,8 @@ public class CustomUserDetails implements UserDetails {
     private String username;
     private String password;
     private String status;
+    private String nickname;
+    private Integer tenantId;
 
     private List<String> roles;
 
@@ -32,6 +34,8 @@ public class CustomUserDetails implements UserDetails {
         this.username = user.getUsername();
         this.password = user.getPassword();
         this.status = user.getUseStatus();
+        this.nickname = user.getNickname();
+        this.tenantId = user.getTenantId();
         this.roles = roles;
     }
 

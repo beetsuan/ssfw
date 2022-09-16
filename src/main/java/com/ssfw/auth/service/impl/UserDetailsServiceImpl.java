@@ -31,11 +31,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     /**
      * 重写loadUserByUsername方法获得用户
      * @param username 用户名
-     * @return
-     * @throws UsernameNotFoundException
      */
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public CustomUserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         List<UserEntity> list = authUserService.lambdaQuery().eq(UserEntity::getUsername, username).eq(UserEntity::getTenantId,1).list();
         if (list.isEmpty()){

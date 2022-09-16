@@ -3,13 +3,15 @@
 <head>
     <meta charset="UTF-8"/>
     <title>登录</title>
-    <style type="text/css">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    <link href="https://getbootstrap.com/docs/4.0/examples/signin/signin.css" rel="stylesheet" crossorigin="anonymous"/>
+    <style>
         body {
-            padding-top: 50px;
+            padding-top: 32px;
         }
 
         .starter-template {
-            padding: 40px 15px;
+            padding: 30px 15px;
             text-align: center;
         }
     </style>
@@ -31,16 +33,20 @@
 <div class="container">
     <div class="starter-template">
         <p th:if="${param.logout}" class="bg-warning">已注销</p>
-        <p th:text="${param.error}" class="bg-danger"></p>
+        <th:block th:if="${#session}">
+            <p th:text="${#session.getAttribute('SPRING_SECURITY_LAST_EXCEPTION')}" class="bg-danger"></p>
+        </th:block>
         <h2>使用账号密码登录</h2>
         <form class="form-signin" role="form" name="form" th:action="@{/login}" action="/login" method="post">
             <div class="form-group">
-                <label for="username">账号</label>
-                <input type="text" class="form-control" id="username" name="username" value="sysadmin" placeholder="账号"/>
+                <input type="text" aria-label="账号" class="form-control" id="username" name="username" value="sysadmin" placeholder="账号"/>
             </div>
             <div class="form-group">
-                <label for="password">密码</label>
-                <input type="password" class="form-control" id="password" name="password" value="000000" placeholder="密码"/>
+                <input type="password" aria-label="密码" class="form-control" id="password" name="password" value="000000" placeholder="密码"/>
+            </div>
+            <div class="form-group">
+                <input type="text" aria-label="验证码" class="form-control" id="captcha" name="captcha" placeholder="验证码"/>
+                <img src="/security/captcha" data-src="/security/captcha" onclick="this.src=this.dataset.src">
             </div>
             <input type="submit" id="login" value="Login" class="btn btn-primary"/>
         </form>
