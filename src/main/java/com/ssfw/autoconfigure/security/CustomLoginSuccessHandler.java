@@ -5,7 +5,6 @@ import com.ssfw.auth.dto.CustomUserDetails;
 import com.ssfw.autoconfigure.CustomSecurityProperties;
 import com.ssfw.autoconfigure.security.event.SecurityUserLoginEvent;
 import com.ssfw.common.framework.response.ResponseVo;
-import com.ssfw.auth.entity.UserSignLogEntity;
 import com.ssfw.common.util.HttpUtil;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -60,13 +59,8 @@ public class CustomLoginSuccessHandler extends SavedRequestAwareAuthenticationSu
         session.setAttribute(UserConstants.SESSION_NICK_NAME, principal.getNickname());
         session.setAttribute(UserConstants.SESSION_TENANT_ID, principal.getTenantId());
 
-        UserSignLogEntity signLog = UserSignLogEntity.login(request);
-        signLog.setSessionId(session.getId());
-        signLog.setUserId(principal.getId());
-        signLog.setUsername(username);
-        signLog.setTenantId(principal.getTenantId());
         //发布用户登录成功事件
-        applicationEventPublisher.publishEvent(new SecurityUserLoginEvent(this, signLog));
+        applicationEventPublisher.publishEvent(new SecurityUserLoginEvent(this, request, principal));
 
 
         if (doResponse(request, response, session, principal)) {

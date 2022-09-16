@@ -2,6 +2,7 @@ package com.ssfw.auth.dto;
 
 import com.ssfw.auth.entity.AuthRoleEntity;
 import com.ssfw.auth.entity.UserEntity;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
  * @since 2.7.3
  */
 @Data
+@AllArgsConstructor
 public class CustomUserDetails implements UserDetails {
 
     private Long id;
@@ -28,6 +30,7 @@ public class CustomUserDetails implements UserDetails {
     private Integer tenantId;
 
     private List<String> roles;
+
 
     public CustomUserDetails(@NotNull UserEntity user,@NotNull List<String> roles) {
         this.id = user.getUserId();

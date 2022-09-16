@@ -3,9 +3,6 @@ package com.ssfw.auth.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.ssfw.auth.entity.AuthRoleEntity;
 import com.ssfw.auth.entity.AuthUserRoleEntity;
-import com.ssfw.auth.vo.AuthRoleVo;
-import com.ssfw.auth.vo.AuthUserRoleVo;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -15,7 +12,6 @@ import java.util.List;
  * @author <a href="hbq@a.com">hbq</a>
  * @date 2022-09-16 15:06:12
  */
-@Repository
 public interface AuthUserRoleMapper extends BaseMapper<AuthUserRoleEntity> {
 
     /**

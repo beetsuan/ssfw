@@ -1,7 +1,7 @@
 package com.ssfw.autoconfigure.security;
 
 import com.ssfw.auth.contant.UserConstants;
-import com.ssfw.auth.entity.UserSignLogEntity;
+import com.ssfw.auth.dto.CustomUserDetails;
 import com.ssfw.autoconfigure.CustomSecurityProperties;
 import com.ssfw.autoconfigure.security.event.SecurityUserLoginEvent;
 import com.ssfw.common.util.HttpUtil;
@@ -41,22 +41,12 @@ public class CustomLoginFailureHandler implements AuthenticationFailureHandler, 
 
         final String message = exception.getMessage();
         try {
-
-            //登录日志
-            UserSignLogEntity signLog = UserSignLogEntity.login(request);
-            signLog.setSessionId("0");
-            signLog.setUserId(null);
-            signLog.setFailureReason(message);
-            signLog.setIsFailed(1);
-            signLog.setUsername(request.getAttribute(UserConstants.LOGIN_USERNAME)+"");
-            Object tenantId = request.getAttribute(UserConstants.SESSION_TENANT_ID);
-            if (null!=tenantId){
-                signLog.setTenantId((Integer) tenantId);
-            }else{
-                signLog.setTenantId(0);
-            }
+            String username = request.getAttribute(UserConstants.LOGIN_USERNAME) + "";
+            Object tenantIdObj = request.getAttribute(UserConstants.SESSION_TENANT_ID);
+            Integer tenantId = null!=tenantIdObj ? (Integer) tenantIdObj : 0;
+            CustomUserDetails principal = new CustomUserDetails(null, username, null, null, null, tenantId,null);
             //发布用户登录失败事件
-            applicationEventPublisher.publishEvent(new SecurityUserLoginEvent(this, signLog));
+            applicationEventPublisher.publishEvent(new SecurityUserLoginEvent(this, request, principal, exception));
 
             if (HttpUtil.isAjaxRequest(request)) {
                 // AJAX请求
