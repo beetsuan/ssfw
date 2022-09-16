@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 用户关联角色 SQL Mapper -->
+<mapper namespace="com.ssfw.auth.mapper.AuthUserRoleMapper">
+
+    <select id="listByUserId" resultType="com.ssfw.auth.entity.AuthRoleEntity">
+        select ar.role_id, ar.role_code, ar.role_name, ar.role_desc, ar.tenant_id
+        from auth_user_role t left join auth_role ar on t.role_id = ar.role_id
+        where t.user_id = #{userId}
+    </select>
+</mapper>

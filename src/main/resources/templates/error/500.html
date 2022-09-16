@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>HTTP 500</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chorme=1">
+    <link rel="shortcut icon" href="static/favicon/favicon.ico" />
+</head>
+<body>
+<!-- begin:: Page -->
+<header>
+    <h1>500</h1>
+</header>
+<article>
+    <!--/*@thymesVar id="errMsg" type="java.lang.String"*/-->
+    <p th:text="${errMsg}"></p>
+    <br>
+    <!--/*@thymesVar id="errDetail" type="java.lang.String"*/-->
+    <p th:text="${errDetail}"></p>
+</article>
+<!-- end:: Page -->
+</body>
+</html>

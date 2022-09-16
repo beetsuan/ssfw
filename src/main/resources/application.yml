@@ -1,0 +1,61 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: ssfw
+  profiles:
+    active: dev
+  main:
+    allow-bean-definition-overriding: true
+  #国际化文件配置
+  messages:
+    basename: i18n/messages
+    cache-duration: 5s
+  servlet:
+    multipart:
+      max-request-size: 2048MB
+      max-file-size: 2048MB
+  thymeleaf:
+    mode: HTML
+    cache: false
+  cache:
+    #主缓存类型
+    type: caffeine
+    #默认的内存缓存，数据字典、SP配置用了这个缓存
+    caffeine:
+      spec: maximumSize=10000,expireAfterAccess=300s
+  jackson:
+    time-zone: GMT+8
+    date-format: 'yyyy-MM-dd HH:mm:ss'
+  quartz:
+    scheduler-name: inmr-quartz-scheduler
+    auto-startup: false
+    startup-delay: 5s
+  mvc:
+    pathmatch:
+      matching-strategy: ANT_PATH_MATCHER
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.0.224:3309/ssfw?autoReconnect=true&autoReconnectForPools=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=CONVERT_TO_NULL&useSSL=false&allowPublicKeyRetrieval=true&pinGlobalTxToPhysicalConnection=true
+    username: root
+    password: 123123
+    hikari:
+      minimum-idle: 2
+      maximum-pool-size: 10
+      idle-timeout: 12000
+  resources:
+    static-locations: classpath:/static/,classpath:/views/
+
+mybatis-plus:
+  mapper-locations: classpath:com/*/mapper/*.xml
+  global-config:
+    db-config:
+      logic-delete-value: 1 # 逻辑已删除值(默认为 1)
+      logic-not-delete-value: 0 # 逻辑未删除值(默认为 0)
+
+logging:
+  level:
+    root: info
+    com.ssfw: debug
+    org.springframework.security: debug
