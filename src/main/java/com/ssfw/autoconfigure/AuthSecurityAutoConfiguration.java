@@ -52,7 +52,7 @@ public class AuthSecurityAutoConfiguration{
                 .and().logout()
                 .and().authorizeRequests()
                 .antMatchers(securityProperties.getLoginSuccessUrl(),"/security/**").permitAll()
-                .antMatchers("/admin/**","do/auth/**").hasRole("admin")
+                .antMatchers("/admin/**","do/**").hasRole("admin")
                 .anyRequest().authenticated()
                 .and().csrf().disable();
 

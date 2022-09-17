@@ -6,13 +6,13 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 标记model属性
+ * 标记Entity属性
  * 用于记录日志的时候，优先级ApiModelProperty
  * @author a
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface PropertyName {
+public @interface EntityField {
 
     String value() default "";
     boolean isMain() default false;

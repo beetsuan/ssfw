@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 配置model类的名称，所属应用
+ * 配置Entity类的名称，所属应用
  * @author a
  */
 @Target(ElementType.TYPE)

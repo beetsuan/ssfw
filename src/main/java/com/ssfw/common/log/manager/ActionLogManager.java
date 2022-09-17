@@ -5,7 +5,7 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.ssfw.auth.util.LoginUserUtil;
 import com.ssfw.common.centext.SpringContextHolder;
 import com.ssfw.common.framework.annotation.EntityName;
-import com.ssfw.common.framework.annotation.PropertyName;
+import com.ssfw.common.framework.annotation.EntityField;
 import com.ssfw.common.log.annotation.ActionLogIgnore;
 import com.ssfw.common.log.annotation.ActionLogName;
 import com.ssfw.common.log.annotation.ActionLogSelector;
@@ -212,7 +212,7 @@ public class ActionLogManager implements Serializable {
                 return -1L;
             }
 
-            PropertyName propertyName;
+            EntityField propertyName;
             List<Object> placeholderValue = new ArrayList<>();
 
             final Method[] methods = null == oldObj ? classNew.getMethods() : oldObj.getClass().getMethods();
@@ -234,7 +234,7 @@ public class ActionLogManager implements Serializable {
                 for (Field field : fields) {
                     // 设置属性是可以访问的(私有的也可以)
                     field.setAccessible(true);
-                    propertyName = field.getAnnotation(PropertyName.class);
+                    propertyName = field.getAnnotation(EntityField.class);
                     if(propertyName != null && propertyName.isMain()){
                         placeholderValue.add(field.get(null == oldObj?newObj:oldObj));
                     }
@@ -295,7 +295,7 @@ public class ActionLogManager implements Serializable {
                         }
                         name = fieldNew.getName();
                         //得到注解
-                        propertyName = fieldNew.getAnnotation(PropertyName.class);
+                        propertyName = fieldNew.getAnnotation(EntityField.class);
                         if (!logAllField && onlyPropertyNameField){
                             if (null == propertyName){
                                 continue;
@@ -329,7 +329,7 @@ public class ActionLogManager implements Serializable {
                     continue;
                 }
                 //得到注解
-                propertyName = fieldNew.getAnnotation(PropertyName.class);
+                propertyName = fieldNew.getAnnotation(EntityField.class);
                 if (!logAllField && onlyPropertyNameField){
                     if (null == propertyName){
                         //忽略字段

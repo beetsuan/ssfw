@@ -20,7 +20,7 @@ import java.util.List;
  * @author ssfw
  * @since 2022-09-14
  */
-@TableName("sp_action_log")
+@TableName("com_action_log")
 @Setter
 @Getter
 public class ActionLog implements Serializable {

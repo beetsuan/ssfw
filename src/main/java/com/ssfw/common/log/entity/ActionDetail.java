@@ -17,7 +17,7 @@ import java.util.Date;
  * @author ssfw
  * @since 2022-09-14
  */
-@TableName("sp_action_detail")
+@TableName("com_action_detail")
 @Setter
 @Getter
 public class ActionDetail {
