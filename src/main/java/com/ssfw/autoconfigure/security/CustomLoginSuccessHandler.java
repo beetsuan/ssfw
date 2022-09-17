@@ -94,7 +94,7 @@ public class CustomLoginSuccessHandler extends SavedRequestAwareAuthenticationSu
         if (null!=savedRequest){
             redirectUrl = savedRequest.getRedirectUrl();
         }else {
-            Object sessionSavedRequest = session.getAttribute("SP_SECURITY_SAVED_REQUEST");
+            Object sessionSavedRequest = session.getAttribute("SECURITY_SAVED_REQUEST");
             if (null != sessionSavedRequest){
                 savedRequest = (SavedRequest) sessionSavedRequest;
                 redirectUrl = savedRequest.getRedirectUrl();

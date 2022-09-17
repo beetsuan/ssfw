@@ -29,7 +29,7 @@ import java.time.LocalDateTime;
 @Data
 @Accessors(chain = true)
 @NoArgsConstructor
-@TableName("sp_sign_log")
+@TableName("com_sign_log")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Slf4j
 public class UserSignLogEntity implements TenantFacade<UserSignLogEntity>, Serializable {

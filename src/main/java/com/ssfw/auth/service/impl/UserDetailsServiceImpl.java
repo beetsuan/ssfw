@@ -41,6 +41,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
         UserEntity user = list.get(0);
         List<AuthRoleEntity> entities = authUserRoleMapper.listByUserId(user.getUserId());
-        return new CustomUserDetails(user, entities.stream().map(AuthRoleEntity::getRoleCode).collect(Collectors.toList()));
+        final String role_ = "ROLE_";;
+        return new CustomUserDetails(user, entities.stream().map(role -> role_ +role.getRoleCode()).collect(Collectors.toList()));
     }
 }
