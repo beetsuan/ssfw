@@ -95,7 +95,7 @@ public class ActionLogManager implements Serializable {
                 actionLog.setObjectId(StringUtil.setEmptyToNull(actionLog.getObjectId()+""));
                 actionLog.setClientId(StringUtil.setEmptyToNull(actionLog.getClientId()));
                 actionLog.setMasterId(NumberUtil.setEmptyToNull(actionLog.getMasterId()));
-                actionLog.setOperDate(new Date());
+                actionLog.setGmtCreate(LocalDateUtil.nowLocalDateTime());
                 //开启事务处理
                 try {
                     actionLogMapper.insert(actionLog);
@@ -228,7 +228,7 @@ public class ActionLogManager implements Serializable {
                     }
                 }
             }
-            //使用PropertyName注解的属性来生成actionName，isMain=true
+            //使用EntityField注解的属性来生成actionName，isMain=true
             if (placeholderValue.size()==0){
                 Field[] fields = null == oldObj ? classNew.getDeclaredFields() : oldObj.getClass().getDeclaredFields();
                 for (Field field : fields) {

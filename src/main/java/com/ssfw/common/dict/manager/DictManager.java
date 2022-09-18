@@ -5,11 +5,19 @@ package com.ssfw.common.dict.manager;
  */
 
 import com.ssfw.common.centext.SpringContextHolder;
+import com.ssfw.common.dict.assembler.DictEntryAssembler;
+import com.ssfw.common.dict.assembler.DictTypeAssembler;
+import com.ssfw.common.dict.controller.cmd.DictEntryCreateCmd;
+import com.ssfw.common.dict.controller.cmd.DictEntryUpdateCmd;
+import com.ssfw.common.dict.controller.cmd.DictTypeCreateCmd;
+import com.ssfw.common.dict.controller.cmd.DictTypeUpdateCmd;
+import com.ssfw.common.dict.controller.vo.DictTypeVO;
 import com.ssfw.common.dict.dto.Dict;
 import com.ssfw.common.dict.entity.DictEntryEntity;
 import com.ssfw.common.dict.entity.DictTypeEntity;
 import com.ssfw.common.dict.service.DictEntryService;
 import com.ssfw.common.dict.service.DictTypeService;
+import com.ssfw.common.env.assembler.EnvPropertiesAssembler;
 import com.ssfw.common.framework.dto.ResultDto;
 import com.ssfw.common.util.StringUtil;
 
@@ -34,10 +42,22 @@ public class DictManager implements Serializable {
     private final DictTypeService typeService;
     private final DictEntryService entryService;
 
+    /**
+     * 对象转换
+     */
+    private final DictEntryAssembler entryAssembler;
+    /**
+     * 对象转换
+     */
+    private final DictTypeAssembler typeAssembler;
 
     private DictManager() {
         this.typeService = SpringContextHolder.getBean(DictTypeService.class);
         this.entryService = SpringContextHolder.getBean(DictEntryService.class);
+
+
+        this.typeAssembler = DictTypeAssembler.INSTANCE;
+        this.entryAssembler = DictEntryAssembler.INSTANCE;
     }
 
 
@@ -136,13 +156,11 @@ public class DictManager implements Serializable {
      * @param type 字典分类
      * @return 失败信息
      */
-    public ResultDto<DictTypeEntity> addType(@NotNull DictTypeEntity type){
+    public ResultDto<DictTypeVO> addType(@NotNull DictTypeCreateCmd type){
 
-        DictTypeEntity dbModel = typeService.getById(type.getDictTypeId());
-        if (null != dbModel){
-            return ResultDto.of("数据字典已存在");
-        }
-        return typeService.save(type) ? ResultDto.of(type) : ResultDto.of("失败");
+        DictTypeEntity entity = typeAssembler.cmdToEntity(type);
+
+        return typeService.save(entity) ? ResultDto.of(typeAssembler.entityToVO(entity)) : ResultDto.of("失败");
     }
 
     /**
@@ -150,50 +168,51 @@ public class DictManager implements Serializable {
      * @param type 字典分类
      * @return 失败信息
      */
-    public ResultDto<DictTypeEntity> updateType(@NotNull DictTypeEntity type){
-        return typeService.updateById(type) ? ResultDto.of(type) : ResultDto.of("失败");
+    public ResultDto<DictTypeVO> updateType(@NotNull DictTypeUpdateCmd type){
+        DictTypeEntity entity = typeAssembler.cmdToEntity(type);
+        return typeService.updateById(entity) ? ResultDto.of(typeAssembler.entityToVO(entity)) : ResultDto.of("失败");
     }
 
     /**
      * 删除数据字典分类
-     * @param type dicttypeid not null 字典分类ID
+     * @param typeId 字典ID
      * @return 失败信息
      */
-    public ResultDto<Boolean> deleteType(@NotNull DictTypeEntity type){
-        return ResultDto.of(typeService.removeById(type));
+    public ResultDto<Boolean> deleteType(@NotNull String typeId){
+        return ResultDto.of(typeService.removeById(new DictTypeEntity(typeId)));
     }
 
     /**
      * 新增数据字典
-     * @param dictTypeId 字典分类ID
+     * @param dictTypeId 字典ID
      * @param dict 字典
      * @return 失败信息
      */
-    public ResultDto<Dict> addDict(@NotNull String dictTypeId, @NotNull Dict dict){
-        DictTypeEntity type = typeService.getById(dictTypeId);
-        if (type == null) {
-           return ResultDto.of("字典不存在");
-        }
-        return entryService.save(dict.toDictEntry()) ? ResultDto.of(dict) : ResultDto.of("失败");
+    public ResultDto<Dict> addDict(@NotNull String dictTypeId, @NotNull DictEntryCreateCmd dict){
+
+        dict.setDictTypeId(dictTypeId);
+        DictEntryEntity entity = entryAssembler.cmdToEntity(dict);
+
+        return entryService.save(entity) ? ResultDto.of(entryAssembler.entityToDict(entity)) : ResultDto.of("失败");
     }
 
     /**
      * 新增数据字典
-     * @param dictTypeId 字典分类ID
+     * @param dictTypeId 字典ID
      * @param dict 字典
      * @return 失败信息
      */
-    public ResultDto<Dict> updateDict(@NotNull String dictTypeId, @NotNull Dict dict){
+    public ResultDto<Dict> updateDict(@NotNull String dictTypeId, @NotNull DictEntryUpdateCmd dict){
 
-        DictEntryEntity entry = dict.toDictEntry();
-        entry.setDictTypeId(dictTypeId);
+        dict.setDictTypeId(dictTypeId);
+        DictEntryEntity entity = entryAssembler.cmdToEntity(dict);
 
-        return entryService.updateById(dict.toDictEntry()) ? ResultDto.of(dict) : ResultDto.of("失败");
+        return entryService.updateById(entity) ? ResultDto.of(entryAssembler.entityToDict(entity)) : ResultDto.of("失败");
     }
 
     /**
      * 删除数据字典
-     * @param dictTypeId 字典分类ID
+     * @param dictTypeId 字典ID
      * @param dictId 字典ID
      * @return 失败信息
      */
@@ -205,7 +224,7 @@ public class DictManager implements Serializable {
 
     /**
      * 失效指定字典缓存
-     * @param dictTypeId 字典分类id
+     * @param dictTypeId 字典ID
      */
     public void cacheEvict(String dictTypeId){
 

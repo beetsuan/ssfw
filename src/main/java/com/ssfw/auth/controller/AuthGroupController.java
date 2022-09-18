@@ -1,24 +1,23 @@
 package com.ssfw.auth.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.ssfw.auth.contant.UserConstants;
-import com.ssfw.auth.util.LoginUserUtil;
 import com.ssfw.common.framework.controller.BaseController;
 import com.ssfw.common.framework.response.ResponseVo;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import lombok.extern.slf4j.Slf4j;
+import com.ssfw.auth.assembler.AuthGroupAssembler;
+import com.ssfw.auth.controller.cmd.AuthGroupCreateCmd;
+import com.ssfw.auth.controller.cmd.AuthGroupUpdateCmd;
 import com.ssfw.auth.entity.AuthGroupEntity;
-import com.ssfw.auth.ro.AuthGroupCreateRo;
-import com.ssfw.auth.ro.AuthGroupUpdateRo;
 import com.ssfw.auth.service.AuthGroupService;
-import com.ssfw.auth.vo.AuthGroupVo;
 import javax.validation.Valid;
 
 /**
- * 用户小组 前端控制器
+ * 用户小组Controller控制器
  *
  * @author <a href="hbq@a.com">hbq</a>
- * @date 2022-09-15 17:19:00
+ * @date 2022-09-18 17:08:01
  */
 @RestController
 @RequestMapping("/do/auth/group")
@@ -27,61 +26,66 @@ public class AuthGroupController extends BaseController<AuthGroupEntity> {
 
     /** 用户小组Service */
     private final AuthGroupService service;
+    /**
+    * 对象转换
+    */
+    private final AuthGroupAssembler assembler;
 
     public AuthGroupController(AuthGroupService service) {
         super(service);
         this.service = service;
+        this.assembler = AuthGroupAssembler.INSTANCE;
     }
 
 
     /**
-     * 获取用户小组
-     * @param id 用户小组ID
-     * @return ResponseVo
-     */
+	 * 根据ID获取数据
+	 */
     @GetMapping(value = "/get/{id}", produces= PRODUCE_UTF8_JSON)
     public ResponseVo get(@PathVariable Integer id){
-        return ResponseVo.of(new AuthGroupVo().of(service.getById(id)));
+        return ResponseVo.ofData(assembler.entityToVO(service.getById(id)));
     }
 
     /**
 	 * 查询用户小组
-	 * @param nickname 参数一
+	 * @param name 参数一
 	 * @return json
 	 */
     @RequestMapping(value = "/list",method = {RequestMethod.GET,RequestMethod.POST},produces= PRODUCE_UTF8_JSON)
-    public ResponseVo list(String nickname){
+    public ResponseVo list(String name){
 
-        AuthGroupEntity entity = new AuthGroupEntity();
-        LambdaQueryWrapper<AuthGroupEntity> wrapper = new LambdaQueryWrapper<>(entity);
-
-        return super.pageQuery(wrapper,new AuthGroupVo());
+        LambdaQueryWrapper<AuthGroupEntity> wrapper = new LambdaQueryWrapper<>();
+        if (StringUtils.isNotEmpty(name)){
+            wrapper.like(AuthGroupEntity::getGroupName, name);
+        }
+        return super.pageQuery(wrapper, assembler);
     }
 
 
     /**
      *  新增用户小组
-     * @param vo AuthGroupVo
+     * @param command AuthGroupCreateCmd
      * @return json
      */
     @PostMapping(value = "/create")
-    public ResponseVo create(@RequestBody @Valid AuthGroupCreateRo vo){
+    public ResponseVo create(@RequestBody @Valid AuthGroupCreateCmd command){
 
-        request.getSession(true).setAttribute(UserConstants.SESSION_TENANT_ID,1);
-        return service.save(vo.toEntity().setTenantId(1)) ? ResponseVo.success(vo) : ResponseVo.failureToAdd();
+        AuthGroupEntity entity = assembler.cmdToEntity(command);
+        return service.save(entity) ? ResponseVo.success(assembler.entityToVO(entity)) : ResponseVo.failureToAdd();
+
     }
 
 
     /**
      *  修改用户小组
-     * @param vo AuthGroupUpdateRo
+     * @param command AuthGroupUpdateCmd
      * @return json
      */
     @PostMapping(value = "/update")
-    public ResponseVo update(@RequestBody @Valid AuthGroupUpdateRo vo){
+    public ResponseVo update(@RequestBody @Valid AuthGroupUpdateCmd command){
 
-        request.getSession(true).setAttribute(UserConstants.SESSION_TENANT_ID,1);
-        return service.updateById(vo.toEntity()) ? ResponseVo.success(vo) : ResponseVo.failureToUpdate();
+        AuthGroupEntity entity = assembler.cmdToEntity(command);
+        return service.updateById(entity) ? ResponseVo.success(assembler.entityToVO(entity)) : ResponseVo.failureToUpdate();
     }
 
     /**

@@ -2,7 +2,6 @@ package com.ssfw.common.log.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.ssfw.common.log.entity.ActionDetail;
-import com.ssfw.common.log.entity.ActionLog;
 
 /**
  * <p>

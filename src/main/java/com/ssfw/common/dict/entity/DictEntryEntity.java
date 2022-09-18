@@ -33,18 +33,18 @@ public class DictEntryEntity implements Serializable {
 	/**
 	 * 字典ID
 	 */
-	@TableId(value = "dict_type_id", type = IdType.AUTO)
-	@EntityField("字典ID")
+	@TableId(value = "dict_type_id", type = IdType.INPUT)
+	@EntityField(value = "字典ID", isMain = true)
 	private String dictTypeId;
 	/**
 	 * 数据项ID
 	 */
-	@EntityField("数据项ID")
+	@EntityField(value = "数据项ID",isMain = true)
 	private String dictId;
 	/**
 	 * 数据项名称
 	 */
-	@EntityField("数据项名称")
+	@EntityField(value = "数据项名称",isMain = true)
 	private String dictName;
 	/**
 	 * 状态 1.有效，2.无效

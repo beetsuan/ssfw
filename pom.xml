@@ -30,6 +30,7 @@
         <jakarta.json.version>2.1.0</jakarta.json.version>
         <mica-auto.version>2.3.1</mica-auto.version>
         <mybatis-plus.version>3.5.2</mybatis-plus.version>
+        <org.mapstruct.version>1.5.2.Final</org.mapstruct.version>
         <yauaa.version>7.5.0</yauaa.version>
     </properties>
 
@@ -157,6 +158,12 @@
         </dependency>
 
         <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>${org.mapstruct.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-generator</artifactId>
             <version>3.5.3</version>
@@ -187,6 +194,32 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>net.dreamlu</groupId>
+                            <artifactId>mica-auto</artifactId>
+                            <version>${mica-auto.version}</version>
+                        </path>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                        <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>${org.mapstruct.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>com.github.shalousun</groupId>
                 <artifactId>smart-doc-maven-plugin</artifactId>
                 <version>2.5.3</version>
@@ -194,7 +227,7 @@
                     <!--指定生成文档的使用的配置文件,配置文件放在自己的项目中-->
                     <configFile>./src/main/resources/smart-doc.json</configFile>
                     <!--指定项目名称-->
-                    <projectName>测试</projectName>
+                    <projectName>ssfw</projectName>
                     <!--smart-doc实现自动分析依赖树加载第三方依赖的源码，如果一些框架依赖库加载不到导致报错，这时请使用excludes排除掉-->
                     <excludes>
                         <!--格式为：groupId:artifactId;参考如下-->

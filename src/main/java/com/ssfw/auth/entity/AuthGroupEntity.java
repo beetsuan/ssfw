@@ -4,8 +4,11 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.ssfw.common.framework.annotation.EntityName;
-import com.ssfw.common.framework.entity.TenantFacade;
+import com.ssfw.common.framework.annotation.EntityField;
+import com.ssfw.common.framework.entity.GmtFieldEntity;
+import com.ssfw.common.framework.entity.TenantEntity;
 import com.ssfw.common.log.annotation.ActionLogSelector;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import lombok.Data;
@@ -17,7 +20,7 @@ import lombok.experimental.Accessors;
  * 
  * @author hbq
  * @email hbq@a.com
- * @date 2022-09-15 17:38:29
+ * @date 2022-09-18 17:08:01
  */
 @Data
 @Accessors(chain = true)
@@ -25,43 +28,29 @@ import lombok.experimental.Accessors;
 @TableName("auth_group")
 @EntityName("用户小组")
 @ActionLogSelector(all = true)
-public class AuthGroupEntity implements TenantFacade<AuthGroupEntity>, Serializable {
+public class AuthGroupEntity extends TenantEntity implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 小组id
 	 */
-	@TableId(value = "group_id", type = IdType.ASSIGN_ID)
+	@TableId(value = "group_id", type = IdType.AUTO)
+	@EntityField("小组id")
 	private Long groupId;
+
 	/**
 	 * 小组名称
 	 */
+	@EntityField("小组名称")
 	private String groupName;
+
 	/**
 	 * 小组编号
 	 */
+	@EntityField("小组编号")
 	private String groupCode;
-	/**
-	 * 租户id
-	 */
-	private Integer tenantId;
-	/**
-	 * 创建人
-	 */
-	private String createUser;
-	/**
-	 * 创建时间
-	 */
-	private LocalDateTime createDate;
-	/**
-	 * 修改人
-	 */
-	private String updateUser;
-	/**
-	 * 修改时间
-	 */
-	private LocalDateTime updateDate;
+
 
 	public AuthGroupEntity(Long groupId) {
 		this.groupId = groupId;

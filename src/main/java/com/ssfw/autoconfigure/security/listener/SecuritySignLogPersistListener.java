@@ -4,6 +4,7 @@ import com.ssfw.autoconfigure.security.event.SecurityUserLoginEvent;
 
 /**
  * 登录日志持久化监听器
+ * @author beets
  */
 public interface SecuritySignLogPersistListener {
 

@@ -1,6 +1,9 @@
 package com.ssfw.common.dict.bizcheck;
 
 
+import com.ssfw.common.centext.SpringContextHolder;
+import com.ssfw.common.dict.entity.DictTypeEntity;
+import com.ssfw.common.dict.mapper.DictTypeMapper;
 import com.ssfw.common.framework.check.BaseBizCheck;
 import com.ssfw.common.dict.entity.DictEntryEntity;
 import com.ssfw.common.dict.service.DictEntryService;
@@ -16,17 +19,20 @@ public class DictEntryBizCheck extends BaseBizCheck<DictEntryEntity> {
     /** 数据字典项Service */
     private final DictEntryService  service;
 
+    private final DictTypeMapper typeMapper;
+
 
     public DictEntryBizCheck(DictEntryService service) {
         super();
         this.service =service;
+        this.typeMapper = SpringContextHolder.getBean(DictTypeMapper.class);
     }
 
     @Override
     public DictEntryBizCheck addable(DictEntryEntity entity){
 
 
-        if (existEntity(entity)){
+        if (!existType(entity) || existEntity(entity)){
             throwIfError();
         }
         return this;
@@ -44,10 +50,20 @@ public class DictEntryBizCheck extends BaseBizCheck<DictEntryEntity> {
     @Override
     public DictEntryBizCheck updatable(DictEntryEntity entity){
 
-        if (existEntity(entity)){
+        if (!existType(entity) || existEntity(entity)){
             throwIfError();
         }
         return this;
+    }
+
+    private boolean existType(DictEntryEntity entity){
+
+        DictTypeEntity type = typeMapper.selectById(entity.getDictTypeId());
+        if (type == null) {
+            addError("字典不存在");
+            return false;
+        }
+        return true;
     }
 
     private boolean existEntity(DictEntryEntity entity){

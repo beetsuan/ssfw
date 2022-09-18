@@ -1,7 +1,7 @@
 package com.ssfw.auth.service;
 
 import com.ssfw.auth.entity.UserEntity;
-import com.ssfw.common.framework.service.CommonService;
+import com.ssfw.common.framework.service.BaseService;
 
 /**
  * <p>
@@ -11,6 +11,6 @@ import com.ssfw.common.framework.service.CommonService;
  * @author ssfw
  * @since 2022-09-14
  */
-public interface AuthUserService extends CommonService<UserEntity> {
+public interface AuthUserService extends BaseService<UserEntity> {
 
 }

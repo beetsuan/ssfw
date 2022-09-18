@@ -1,7 +1,6 @@
 package com.ssfw.common.env.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.ssfw.common.framework.annotation.EntityName;
@@ -14,15 +13,19 @@ import java.time.LocalDateTime;
 
 import com.ssfw.common.util.StringUtil;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 /**
  * 环境配置
  * 
  * @author hbq
  * @email hbq@a.com
- * @date 2022-09-17 16:00:34
+ * @date 2022-09-18 15:05:09
  */
 @Data
+@Accessors(chain = true)
+@NoArgsConstructor
 @TableName("com_env_properties")
 @EntityName("环境配置")
 @ActionLogSelector(all = true)
@@ -35,13 +38,12 @@ public class EnvPropertiesEntity implements Serializable {
 	 */
 	@TableId(value = "prop_key", type = IdType.INPUT)
 	@EntityField("配置键")
-	private String key;
+	private String propKey;
 	/**
 	 * 配置说明
 	 */
 	@EntityField("配置说明")
-	@TableField(value = "prop_title")
-	private String title;
+	private String propTitle;
 	/**
 	 * 配置值1
 	 */
@@ -68,31 +70,37 @@ public class EnvPropertiesEntity implements Serializable {
 	@EntityField("配置值5")
 	private String value05;
 	/**
-	 * 创建人
+	 * 创建者ID
 	 */
-	@EntityField("创建人")
-	private String createUser;
+	@EntityField("创建者ID")
+	private Long creatorId;
+	/**
+	 * 创建者
+	 */
+	@EntityField("创建者")
+	private String creatorName;
 	/**
 	 * 创建时间
 	 */
 	@EntityField("创建时间")
-	private LocalDateTime createDate;
+	private LocalDateTime createTime;
 	/**
-	 * 修改人
+	 * 更新者ID
 	 */
-	@EntityField("修改人")
-	private String updateUser;
+	@EntityField("更新者ID")
+	private Long updaterId;
+	/**
+	 * 更新者
+	 */
+	@EntityField("更新者")
+	private String updaterName;
 	/**
 	 * 修改时间
 	 */
 	@EntityField("修改时间")
-	private LocalDateTime updateDate;
-
-	public EnvPropertiesEntity() {
-	}
-
-	public EnvPropertiesEntity(String key) {
-		this.key = key;
+	private LocalDateTime updateTime;
+	public EnvPropertiesEntity(String propKey) {
+		this.propKey = propKey;
 	}
 
 	public static EnvPropertiesEntity off() {
@@ -108,6 +116,6 @@ public class EnvPropertiesEntity implements Serializable {
 
 	@ActionLogName
 	public String toLogString(){
-		return StringUtil.join( "键:", getKey(), "，描述:", getTitle());
+		return StringUtil.join( "键:", this.getPropKey(), "，描述:", this.getPropTitle());
 	}
 }

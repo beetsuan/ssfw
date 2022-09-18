@@ -5,7 +5,7 @@ import com.ssfw.auth.entity.UserEntity;
 import com.ssfw.auth.mapper.AuthUserMapper;
 import com.ssfw.auth.service.AuthUserService;
 import com.ssfw.common.framework.check.ValidStatus;
-import com.ssfw.common.framework.service.impl.CommonServiceImpl;
+import com.ssfw.common.framework.service.impl.BaseServiceImpl;
 import com.ssfw.common.log.annotation.ActionLog;
 import com.ssfw.common.log.constant.ActionTypeEnum;
 import com.ssfw.common.tenant.TenantAssistant;
@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
  * @since 2022-09-14
  */
 @Service
-public class AuthUserServiceImpl extends CommonServiceImpl<AuthUserMapper, UserEntity> implements AuthUserService {
+public class AuthUserServiceImpl extends BaseServiceImpl<AuthUserMapper, UserEntity> implements AuthUserService {
 
 
     @Override

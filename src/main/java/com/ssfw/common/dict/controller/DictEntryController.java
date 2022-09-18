@@ -1,24 +1,23 @@
 package com.ssfw.common.dict.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.ssfw.common.dict.entity.DictTypeEntity;
 import com.ssfw.common.framework.controller.BaseController;
 import com.ssfw.common.framework.response.ResponseVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import lombok.extern.slf4j.Slf4j;
+import com.ssfw.common.dict.assembler.DictEntryAssembler;
+import com.ssfw.common.dict.controller.cmd.DictEntryCreateCmd;
+import com.ssfw.common.dict.controller.cmd.DictEntryUpdateCmd;
 import com.ssfw.common.dict.entity.DictEntryEntity;
-import com.ssfw.common.dict.ro.DictEntryCreateRo;
-import com.ssfw.common.dict.ro.DictEntryUpdateRo;
 import com.ssfw.common.dict.service.DictEntryService;
-import com.ssfw.common.dict.vo.DictEntryVo;
 import javax.validation.Valid;
 
 /**
  * 数据字典项Controller控制器
  *
  * @author <a href="hbq@a.com">hbq</a>
- * @date 2022-09-17 15:48:49
+ * @date 2022-09-18 16:30:56
  */
 @RestController
 @RequestMapping("/do/common/dict/entry")
@@ -27,10 +26,15 @@ public class DictEntryController extends BaseController<DictEntryEntity> {
 
     /** 数据字典项Service */
     private final DictEntryService service;
+    /**
+    * 对象转换
+    */
+    private final DictEntryAssembler assembler;
 
     public DictEntryController(DictEntryService service) {
         super(service);
         this.service = service;
+        this.assembler = DictEntryAssembler.INSTANCE;
     }
 
 
@@ -41,7 +45,7 @@ public class DictEntryController extends BaseController<DictEntryEntity> {
 	 */
     @GetMapping(value = "/get/{typeId}/{id}", produces= PRODUCE_UTF8_JSON)
     public ResponseVo get(@PathVariable String typeId,@PathVariable String id){
-        return ResponseVo.of(new DictEntryVo().of(service.get(typeId, id)));
+        return ResponseVo.ofData(assembler.entityToVO(service.get(typeId, id)));
     }
 
     /**
@@ -55,8 +59,7 @@ public class DictEntryController extends BaseController<DictEntryEntity> {
     @RequestMapping(value = "/list",method = {RequestMethod.GET,RequestMethod.POST},produces= PRODUCE_UTF8_JSON)
     public ResponseVo list(String typeId, String id,String name,String status){
 
-        DictEntryEntity entity = new DictEntryEntity();
-        LambdaQueryWrapper<DictEntryEntity> wrapper = new LambdaQueryWrapper<>(entity);
+        LambdaQueryWrapper<DictEntryEntity> wrapper = new LambdaQueryWrapper<>();
         if (StringUtils.isNotEmpty(typeId)){
             wrapper.eq(DictEntryEntity::getDictTypeId,typeId);
         }
@@ -69,36 +72,38 @@ public class DictEntryController extends BaseController<DictEntryEntity> {
         if (StringUtils.isNotEmpty(status)){
             wrapper.eq(DictEntryEntity::getDictStatus,status);
         }
-        return super.pageQuery(wrapper,new DictEntryVo());
+        return super.pageQuery(wrapper,assembler);
     }
 
 
     /**
      *  新增数据字典项
-     * @param vo DictEntryVo
+     * @param command DictEntryCreateCmd
      * @return json
      */
     @PostMapping(value = "/create")
-    public ResponseVo create(@RequestBody @Valid DictEntryCreateRo vo){
+    public ResponseVo create(@RequestBody @Valid DictEntryCreateCmd command){
 
-        return service.save(vo.toEntity()) ? ResponseVo.success(vo) : ResponseVo.failureToAdd();
+        DictEntryEntity entity = assembler.cmdToEntity(command);
+        return service.save(entity) ? ResponseVo.success(assembler.entityToVO(entity)) : ResponseVo.failureToAdd();
+
     }
 
 
     /**
      *  修改数据字典项
-     * @param vo DictEntryUpdateRo
+     * @param command DictEntryUpdateCmd
      * @return json
      */
     @PostMapping(value = "/update")
-    public ResponseVo update(@RequestBody @Valid DictEntryUpdateRo vo){
+    public ResponseVo update(@RequestBody @Valid DictEntryUpdateCmd command){
 
-        return service.updateById(vo.toEntity()) ? ResponseVo.success(vo) : ResponseVo.failureToUpdate();
+        DictEntryEntity entity = assembler.cmdToEntity(command);
+        return service.updateById(entity) ? ResponseVo.success(assembler.entityToVO(entity)) : ResponseVo.failureToUpdate();
     }
 
     /**
 	 * 删除数据字典项
-     * @param typeId 数据字典ID
      * @param id 数据字典项ID
 	 * @return json
 	 */

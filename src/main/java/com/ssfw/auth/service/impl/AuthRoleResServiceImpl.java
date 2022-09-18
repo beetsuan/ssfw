@@ -2,7 +2,7 @@ package com.ssfw.auth.service.impl;
 
 
 import com.ssfw.common.framework.check.ValidStatus;
-import com.ssfw.common.framework.service.impl.CommonServiceImpl;
+import com.ssfw.common.framework.service.impl.BaseServiceImpl;
 import org.springframework.stereotype.Service;
 import com.ssfw.auth.mapper.AuthRoleResMapper;
 import com.ssfw.auth.entity.AuthRoleResEntity;
@@ -15,7 +15,7 @@ import com.ssfw.auth.bizcheck.AuthRoleResBizCheck;
  * @date 2022-09-16 10:27:26
  */
 @Service
-public class AuthRoleResServiceImpl extends CommonServiceImpl<AuthRoleResMapper, AuthRoleResEntity> implements AuthRoleResService {
+public class AuthRoleResServiceImpl extends BaseServiceImpl<AuthRoleResMapper, AuthRoleResEntity> implements AuthRoleResService {
 
     @Override
     public ValidStatus<AuthRoleResEntity> getBizCheck() {

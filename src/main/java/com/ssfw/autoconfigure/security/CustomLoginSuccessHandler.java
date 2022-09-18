@@ -26,6 +26,7 @@ import java.io.IOException;
 
 /**
  * 登录成功的处理程序
+ * @author beets
  */
 public class CustomLoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler implements ApplicationEventPublisherAware {
 
@@ -151,12 +152,14 @@ public class CustomLoginSuccessHandler extends SavedRequestAwareAuthenticationSu
         if (null != savedRequest){
 
             //savedRequest
-            String targetUrlParameter = this.getTargetUrlParameter();
-            if (!this.isAlwaysUseDefaultTargetUrl() && (targetUrlParameter == null || !StringUtils.hasText(request.getParameter(targetUrlParameter)))) {
-                this.clearAuthenticationAttributes(request);
-                this.logger.debug("Redirecting to DefaultSavedRequest Url: " + redirectUrl);
-                this.getRedirectStrategy().sendRedirect(request, response, redirectUrl);
-                return true;
+            if (!this.isAlwaysUseDefaultTargetUrl()){
+                String targetUrlParameter = this.getTargetUrlParameter();
+                if (targetUrlParameter == null || !StringUtils.hasText(request.getParameter(targetUrlParameter))) {
+                    this.clearAuthenticationAttributes(request);
+                    this.logger.debug("Redirecting to DefaultSavedRequest Url: " + redirectUrl);
+                    this.getRedirectStrategy().sendRedirect(request, response, redirectUrl);
+                    return true;
+                }
             }
         }
         return false;

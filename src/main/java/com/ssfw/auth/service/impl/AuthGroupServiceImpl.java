@@ -2,7 +2,7 @@ package com.ssfw.auth.service.impl;
 
 
 import com.ssfw.common.framework.check.ValidStatus;
-import com.ssfw.common.framework.service.impl.CommonServiceImpl;
+import com.ssfw.common.framework.service.impl.BaseServiceImpl;
 import org.springframework.stereotype.Service;
 import com.ssfw.auth.mapper.AuthGroupMapper;
 import com.ssfw.auth.entity.AuthGroupEntity;
@@ -15,7 +15,7 @@ import com.ssfw.auth.bizcheck.AuthGroupBizCheck;
  * @date 2022-09-15 17:19:00
  */
 @Service
-public class AuthGroupServiceImpl extends CommonServiceImpl<AuthGroupMapper, AuthGroupEntity> implements AuthGroupService {
+public class AuthGroupServiceImpl extends BaseServiceImpl<AuthGroupMapper, AuthGroupEntity> implements AuthGroupService {
 
     @Override
     public ValidStatus<AuthGroupEntity> getBizCheck() {

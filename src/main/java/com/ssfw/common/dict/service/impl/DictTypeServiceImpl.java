@@ -3,7 +3,7 @@ package com.ssfw.common.dict.service.impl;
 
 import com.ssfw.common.cache.BaseCache;
 import com.ssfw.common.framework.check.ValidStatus;
-import com.ssfw.common.framework.service.impl.CommonServiceImpl;
+import com.ssfw.common.framework.service.impl.BaseServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,7 @@ import com.ssfw.common.dict.bizcheck.DictTypeBizCheck;
  */
 @Service
 @Slf4j
-public class DictTypeServiceImpl extends CommonServiceImpl<DictTypeMapper, DictTypeEntity> implements DictTypeService {
+public class DictTypeServiceImpl extends BaseServiceImpl<DictTypeMapper, DictTypeEntity> implements DictTypeService {
 
     @Override
     public ValidStatus<DictTypeEntity> getBizCheck() {

@@ -1,6 +1,6 @@
 package com.ssfw.auth.service;
 
-import com.ssfw.common.framework.service.CommonService;
+import com.ssfw.common.framework.service.BaseService;
 import com.ssfw.auth.entity.AuthUserRoleEntity;
 
 /**
@@ -9,7 +9,7 @@ import com.ssfw.auth.entity.AuthUserRoleEntity;
  * @author <a href="hbq@a.com">hbq</a>
  * @date 2022-09-16 15:06:12
  */
-public interface AuthUserRoleService extends CommonService<AuthUserRoleEntity> {
+public interface AuthUserRoleService extends BaseService<AuthUserRoleEntity> {
 
 }
 

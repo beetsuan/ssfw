@@ -1,7 +1,7 @@
 package com.ssfw.auth.service;
 
 import com.ssfw.auth.entity.AuthGroupEntity;
-import com.ssfw.common.framework.service.CommonService;
+import com.ssfw.common.framework.service.BaseService;
 
 /**
  * 用户小组Service接口
@@ -9,7 +9,7 @@ import com.ssfw.common.framework.service.CommonService;
  * @author <a href="hbq@a.com">hbq</a>
  * @date 2022-09-15 17:19:00
  */
-public interface AuthGroupService extends CommonService<AuthGroupEntity> {
+public interface AuthGroupService extends BaseService<AuthGroupEntity> {
 
 }
 

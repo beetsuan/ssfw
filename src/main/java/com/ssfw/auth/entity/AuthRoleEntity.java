@@ -4,6 +4,9 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.ssfw.common.framework.annotation.EntityName;
+import com.ssfw.common.framework.annotation.EntityField;
+import com.ssfw.common.framework.entity.GmtFieldEntity;
+import com.ssfw.common.framework.entity.TenantEntity;
 import com.ssfw.common.log.annotation.ActionLogSelector;
 
 import java.io.Serializable;
@@ -17,7 +20,7 @@ import lombok.experimental.Accessors;
  * 
  * @author hbq
  * @email hbq@a.com
- * @date 2022-09-16 15:09:19
+ * @date 2022-09-18 17:14:41
  */
 @Data
 @Accessors(chain = true)
@@ -25,47 +28,35 @@ import lombok.experimental.Accessors;
 @TableName("auth_role")
 @EntityName("用户角色")
 @ActionLogSelector(all = true)
-public class AuthRoleEntity implements Serializable {
+public class AuthRoleEntity extends TenantEntity implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 角色id
 	 */
-	@TableId(value = "role_id", type = IdType.ASSIGN_ID)
+	@TableId(value = "role_id", type = IdType.AUTO)
+	@EntityField("角色id")
 	private Long roleId;
+
 	/**
 	 * 角色code
 	 */
+	@EntityField("角色code")
 	private String roleCode;
+
 	/**
 	 * 角色名称
 	 */
+	@EntityField("角色名称")
 	private String roleName;
+
 	/**
 	 * 描述
 	 */
+	@EntityField("描述")
 	private String roleDesc;
-	/**
-	 * 租户id
-	 */
-	private Integer tenantId;
-	/**
-	 * 创建人
-	 */
-	private String createUser;
-	/**
-	 * 创建时间
-	 */
-	private LocalDateTime createDate;
-	/**
-	 * 修改人
-	 */
-	private String updateUser;
-	/**
-	 * 修改时间
-	 */
-	private LocalDateTime updateDate;
+
 
 	public AuthRoleEntity(Long roleId) {
 		this.roleId = roleId;

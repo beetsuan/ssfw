@@ -9,7 +9,7 @@ import com.ssfw.common.env.service.EnvPropertiesService;
  * 环境配置 业务验证
  *
  * @author <a href="hbq@a.com">hbq</a>
- * @date 2022-09-17 16:00:34
+ * @date 2022-09-18 15:05:09
 */
 public class EnvPropertiesBizCheck extends BaseBizCheck<EnvPropertiesEntity> {
 
@@ -30,7 +30,7 @@ public class EnvPropertiesBizCheck extends BaseBizCheck<EnvPropertiesEntity> {
     public EnvPropertiesBizCheck deletable(EnvPropertiesEntity entity){
 
         if (needBizCheck()) {
-            required(entity.getKey(),"环境配置ID");
+            required(entity.getPropKey(),"环境配置ID");
         }
         return this;
     }
@@ -39,7 +39,7 @@ public class EnvPropertiesBizCheck extends BaseBizCheck<EnvPropertiesEntity> {
     public EnvPropertiesBizCheck updatable(EnvPropertiesEntity entity){
 
         if (needBizCheck()) {
-            required(entity.getKey(),"环境配置ID");
+            required(entity.getPropKey(),"环境配置ID");
         }
         return this;
     }

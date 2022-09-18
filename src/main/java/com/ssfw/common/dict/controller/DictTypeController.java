@@ -1,24 +1,23 @@
 package com.ssfw.common.dict.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.ssfw.common.env.entity.EnvPropertiesEntity;
 import com.ssfw.common.framework.controller.BaseController;
 import com.ssfw.common.framework.response.ResponseVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import lombok.extern.slf4j.Slf4j;
+import com.ssfw.common.dict.assembler.DictTypeAssembler;
+import com.ssfw.common.dict.controller.cmd.DictTypeCreateCmd;
+import com.ssfw.common.dict.controller.cmd.DictTypeUpdateCmd;
 import com.ssfw.common.dict.entity.DictTypeEntity;
-import com.ssfw.common.dict.ro.DictTypeCreateRo;
-import com.ssfw.common.dict.ro.DictTypeUpdateRo;
 import com.ssfw.common.dict.service.DictTypeService;
-import com.ssfw.common.dict.vo.DictTypeVo;
 import javax.validation.Valid;
 
 /**
  * 数据字典Controller控制器
  *
  * @author <a href="hbq@a.com">hbq</a>
- * @date 2022-09-17 15:50:42
+ * @date 2022-09-18 16:29:10
  */
 @RestController
 @RequestMapping("/do/common/dict/type")
@@ -27,10 +26,15 @@ public class DictTypeController extends BaseController<DictTypeEntity> {
 
     /** 数据字典Service */
     private final DictTypeService service;
+    /**
+    * 对象转换
+    */
+    private final DictTypeAssembler assembler;
 
     public DictTypeController(DictTypeService service) {
         super(service);
         this.service = service;
+        this.assembler = DictTypeAssembler.INSTANCE;
     }
 
 
@@ -39,7 +43,7 @@ public class DictTypeController extends BaseController<DictTypeEntity> {
 	 */
     @GetMapping(value = "/get/{id}", produces= PRODUCE_UTF8_JSON)
     public ResponseVo get(@PathVariable Integer id){
-        return ResponseVo.of(new DictTypeVo().of(service.getById(id)));
+        return ResponseVo.ofData(assembler.entityToVO(service.getById(id)));
     }
 
     /**
@@ -53,8 +57,7 @@ public class DictTypeController extends BaseController<DictTypeEntity> {
     @RequestMapping(value = "/list",method = {RequestMethod.GET,RequestMethod.POST},produces= PRODUCE_UTF8_JSON)
     public ResponseVo list(String id,String name,String status,String parentId){
 
-        DictTypeEntity entity = new DictTypeEntity();
-        LambdaQueryWrapper<DictTypeEntity> wrapper = new LambdaQueryWrapper<>(entity);
+        LambdaQueryWrapper<DictTypeEntity> wrapper = new LambdaQueryWrapper<>();
         if (StringUtils.isNotEmpty(id)){
             wrapper.like(DictTypeEntity::getDictTypeId,id);
         }
@@ -67,31 +70,34 @@ public class DictTypeController extends BaseController<DictTypeEntity> {
         if (StringUtils.isNotEmpty(parentId)){
             wrapper.eq(DictTypeEntity::getParentId,parentId);
         }
-        return super.pageQuery(wrapper,new DictTypeVo());
+        return super.pageQuery(wrapper, assembler);
     }
 
 
     /**
      *  新增数据字典
-     * @param vo DictTypeVo
+     * @param command DictTypeCreateCmd
      * @return json
      */
     @PostMapping(value = "/create")
-    public ResponseVo create(@RequestBody @Valid DictTypeCreateRo vo){
+    public ResponseVo create(@RequestBody @Valid DictTypeCreateCmd command){
 
-        return service.save(vo.toEntity()) ? ResponseVo.success(vo) : ResponseVo.failureToAdd();
+        DictTypeEntity entity = assembler.cmdToEntity(command);
+        return service.save(entity) ? ResponseVo.success(assembler.entityToVO(entity)) : ResponseVo.failureToAdd();
+
     }
 
 
     /**
      *  修改数据字典
-     * @param vo DictTypeUpdateRo
+     * @param command DictTypeUpdateCmd
      * @return json
      */
     @PostMapping(value = "/update")
-    public ResponseVo update(@RequestBody @Valid DictTypeUpdateRo vo){
+    public ResponseVo update(@RequestBody @Valid DictTypeUpdateCmd command){
 
-        return service.updateById(vo.toEntity()) ? ResponseVo.success(vo) : ResponseVo.failureToUpdate();
+        DictTypeEntity entity = assembler.cmdToEntity(command);
+        return service.updateById(entity) ? ResponseVo.success(assembler.entityToVO(entity)) : ResponseVo.failureToUpdate();
     }
 
     /**

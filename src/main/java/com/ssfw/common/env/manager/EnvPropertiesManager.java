@@ -12,7 +12,8 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 /**
- * SP系统环境配置管理器
+ * 系统环境配置管理器
+ * @author beets
  */
 @Slf4j
 public class EnvPropertiesManager implements Serializable {
@@ -71,7 +72,7 @@ public class EnvPropertiesManager implements Serializable {
 
         LambdaQueryChainWrapper<EnvPropertiesEntity> wrapper = service.lambdaQuery();
         for (int i = 0; i < key.length; i++) {
-            wrapper.eq(EnvPropertiesEntity::getKey, key[i]);
+            wrapper.eq(EnvPropertiesEntity::getPropKey, key[i]);
             if (i< key.length-1){
                 wrapper.or();
             }
@@ -156,7 +157,7 @@ public class EnvPropertiesManager implements Serializable {
     }
 
     public void save(EnvPropertiesEntity entity){
-        String oldKey = entity.getKey();
+        String oldKey = entity.getPropKey();
         EnvPropertiesEntity dbModel = get(oldKey);
         if (null == dbModel){
             service.save(entity);

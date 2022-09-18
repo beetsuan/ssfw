@@ -9,7 +9,7 @@ import com.ssfw.auth.service.AuthRoleResService;
  * 角色权限 业务验证
  *
  * @author <a href="hbq@a.com">hbq</a>
- * @date 2022-09-16 10:27:26
+ * @date 2022-09-18 17:14:53
 */
 public class AuthRoleResBizCheck extends BaseBizCheck<AuthRoleResEntity> {
 

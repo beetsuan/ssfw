@@ -64,12 +64,20 @@ public class ReflectUtil {
     }
 
     public static boolean hasField(Class<?> targetClass, String fieldName){
+
+        return null != getField(targetClass, fieldName);
+    }
+
+    public static Field getField(Class<?> targetClass, String fieldName){
         try {
             targetClass.getDeclaredField(fieldName);
         }catch (NoSuchFieldException ignore){
-            return false;
+            try {
+                return targetClass.getSuperclass().getDeclaredField(fieldName);
+            }catch (NoSuchFieldException ignore2){
+            }
         }
-        return true;
+        return null;
     }
 
     /**
@@ -81,10 +89,8 @@ public class ReflectUtil {
     public static void setValue(Class<?> targetClass,Object object,String fieldName,Object fieldValue){
 
         try {
-            Field f;
-            try {
-                f = targetClass.getDeclaredField(fieldName);
-            }catch (NoSuchFieldException ignore){
+            Field f = getField(targetClass, fieldName);
+            if (null == f){
                 return;
             }
             f.setAccessible(true);
@@ -114,12 +120,10 @@ public class ReflectUtil {
      */
     public static boolean setValueIfAbsent(Object object,String fieldName,Object fieldValue){
 
-        if (ReflectUtil.hasField(object.getClass(), fieldName)) {
-            Object value = ReflectUtil.getValue(object, fieldName);
-            if (null == value){
-                ReflectUtil.setValue(object,fieldName,fieldValue);
-                return true;
-            }
+        Object value = ReflectUtil.getValue(object, fieldName);
+        if (null == value){
+            ReflectUtil.setValue(object,fieldName,fieldValue);
+            return true;
         }
         return false;
     }
@@ -135,6 +139,18 @@ public class ReflectUtil {
         if (null != entity) {
 
             Method[] methods = entity.getClass().getMethods();
+
+            for (Method method : methods) {
+                if (method.getName().equals("get" + filedName)) {
+                    try {
+                        return method.invoke(entity);
+                    } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+                        log.error("getFieldValue Exception:"+e.getMessage());
+                    }
+                }
+            }
+
+            methods = entity.getClass().getSuperclass().getMethods();
 
             for (Method method : methods) {
                 if (method.getName().equals("get" + filedName)) {

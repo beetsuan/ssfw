@@ -4,10 +4,10 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ssfw.common.framework.assembler.AssemblerFacade;
 import com.ssfw.common.framework.request.Pagination;
 import com.ssfw.common.framework.response.ResponseVo;
-import com.ssfw.common.framework.service.CommonService;
-import com.ssfw.common.framework.vo.ValueObjectOfEntity;
+import com.ssfw.common.framework.service.BaseService;
 import com.ssfw.common.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ import java.nio.charset.StandardCharsets;
 public class BaseController<T> {
 
     private IService<T> service;
-    private CommonService<T> commonService;
+    private BaseService<T> baseService;
 
     public static final String PRODUCE_UTF8_JSON ="application/json;charset=UTF-8";
 
@@ -48,8 +48,8 @@ public class BaseController<T> {
         this.service = service;
     }
 
-    public BaseController(CommonService<T> commonService) {
-        this.commonService = commonService;
+    public BaseController(BaseService<T> baseService) {
+        this.baseService = baseService;
     }
 
 
@@ -79,8 +79,8 @@ public class BaseController<T> {
     protected Page<T> page(LambdaQueryWrapper<T> wrapper){
         Pagination<T> pagination = new Pagination<>(request);
         Page<T> page = pagination.getPage();
-        if (null!=commonService){
-            return commonService.page(page, wrapper);
+        if (null!= baseService){
+            return baseService.page(page, wrapper);
         }
         return service.page(page, wrapper);
     }
@@ -88,22 +88,35 @@ public class BaseController<T> {
     protected Page<T> page(QueryWrapper<T> wrapper){
         Pagination<T> pagination = new Pagination<>(request);
         Page<T> page = pagination.getPage();
-        if (null!=commonService){
-            return commonService.page(page, wrapper);
+        if (null!= baseService){
+            return baseService.page(page, wrapper);
         }
         return service.page(page, wrapper);
     }
 
-    protected ResponseVo pageQuery(LambdaQueryWrapper<T> wrapper, ValueObjectOfEntity vo){
+    /**
+     * 分页查询
+     * @param wrapper LambdaQueryWrapper
+     * @param mapper AssemblerFacade
+     * @return ResponseVo
+     */
+    protected ResponseVo pageQuery(LambdaQueryWrapper<T> wrapper, AssemblerFacade mapper){
 
         Page<T> page = page(wrapper);
-        return ResponseVo.success(vo.of(page.getRecords())).setTotal(page.getTotal());
+
+        return ResponseVo.success(mapper.entityToVO(page.getRecords())).setTotal(page.getTotal());
     }
 
-    protected ResponseVo pageQuery(QueryWrapper<T> wrapper, ValueObjectOfEntity vo){
+    /**
+     * 分页查询
+     * @param wrapper QueryWrapper
+     * @param mapper AssemblerFacade
+     * @return ResponseVo
+     */
+    protected ResponseVo pageQuery(QueryWrapper<T> wrapper, AssemblerFacade mapper){
 
         Page<T> page = page(wrapper);
-        return ResponseVo.success(vo.of(page.getRecords())).setTotal(page.getTotal());
+        return ResponseVo.success(mapper.entityToVO(page.getRecords())).setTotal(page.getTotal());
     }
 
     /**

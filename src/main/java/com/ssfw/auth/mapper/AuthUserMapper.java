@@ -1,8 +1,8 @@
 package com.ssfw.auth.mapper;
 
+import com.ssfw.auth.controller.vo.UserVO;
 import com.ssfw.auth.entity.UserEntity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.ssfw.auth.vo.UserVo;
 
 import java.util.List;
 
@@ -16,5 +16,10 @@ import java.util.List;
  */
 public interface AuthUserMapper extends BaseMapper<UserEntity> {
 
-    List<UserVo> queryAll(UserVo vo);
+    /**
+     * 查询所以用户
+     * @param vo UserVO
+     * @return UserVO
+     */
+    List<UserVO> queryAll(UserVO vo);
 }

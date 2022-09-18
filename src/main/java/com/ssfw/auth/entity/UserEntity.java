@@ -1,23 +1,22 @@
 package com.ssfw.auth.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import com.ssfw.common.framework.annotation.EntityName;
-import com.ssfw.common.framework.entity.TenantFacade;
+import com.ssfw.common.framework.annotation.EntityField;
+import com.ssfw.common.framework.entity.TenantEntity;
 import com.ssfw.common.log.annotation.ActionLogSelector;
+
+import java.io.Serializable;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
-import java.io.Serializable;
-import java.time.LocalDateTime;
-
-
 /**
- * 用户 实体
- * @author a
+ * 用户
+ *
+ * @author hbq
+ * @email hbq@a.com
+ * @date 2022-09-18 17:18:02
  */
 @Data
 @Accessors(chain = true)
@@ -25,7 +24,7 @@ import java.time.LocalDateTime;
 @TableName("auth_user")
 @EntityName("用户")
 @ActionLogSelector(all = true)
-public class UserEntity implements TenantFacade<UserEntity>, Serializable {
+public class UserEntity extends TenantEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -38,65 +37,45 @@ public class UserEntity implements TenantFacade<UserEntity>, Serializable {
     /**
      * 用户id
      */
-    @TableId(value = "user_id", type = IdType.ASSIGN_ID)
+    @TableId(value = "user_id", type = IdType.AUTO)
+    @EntityField("用户id")
     private Long userId;
 
     /**
      * 登录名称
      */
+    @EntityField("登录名称")
     private String username;
 
     /**
      * 密码
      */
+    @EntityField("密码")
     private String password;
 
     /**
      * 用户昵称
      */
+    @EntityField("用户昵称")
     private String nickname;
 
     /**
-     * 账号状态 valid有效 suspended挂起
+     * 账号状态 valid有效 suspend挂起
      */
+    @EntityField("账号状态 valid有效 suspend挂起")
     private String useStatus;
 
     /**
      * 分组id
      */
+    @EntityField("分组id")
     private Long groupId;
 
     /**
-     * 租户id
+     * 是否删除 1.删除
      */
-    private Integer tenantId;
-
-    /**
-     * 逻辑删除
-     * 已删除值(1)，未删除值(0)
-     */
-    @TableLogic
+    @EntityField("是否删除 1.删除")
     private Integer deleted;
-
-    /**
-     * 创建人
-     */
-    private String createUser;
-
-    /**
-     * 创建时间
-     */
-    private LocalDateTime createDate;
-
-    /**
-     * 修改人
-     */
-    private String updateUser;
-
-    /**
-     * 修改时间
-     */
-    private LocalDateTime updateDate;
 
     public UserEntity(Long userId) {
         this.userId = userId;

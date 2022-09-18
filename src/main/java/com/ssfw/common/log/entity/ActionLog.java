@@ -8,6 +8,7 @@ import com.ssfw.common.util.ReflectUtil;
 import lombok.Getter;
 import lombok.Setter;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -47,8 +48,10 @@ public class ActionLog implements Serializable {
      *  类名称
      */
     private String objectType;
-
-    private Date operDate;
+    /**
+     * 创建时间
+     */
+    private LocalDateTime gmtCreate;
     private Long operatorId;
     /**
      * 避免用户更改了显示名称

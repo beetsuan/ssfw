@@ -9,6 +9,7 @@ import java.io.PrintWriter;
 
 /**
  * json输出
+ * @author beets
  */
 public class OutJsonHandler {
 

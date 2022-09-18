@@ -25,22 +25,29 @@ public class CodeGenerator {
     public void gen() {
         FastAutoGenerator.create(dataSourceProperties.getUrl(), dataSourceProperties.getUsername(), dataSourceProperties.getPassword())
                 .globalConfig(builder -> {
-                    builder.author("ssfw") // 设置作者
-                            .fileOverride()
+                    // 设置作者
+                    builder.author("ssfw")
                             .enableSpringdoc()
-                            .outputDir("D:/mapper/"); // 指定输出目录
+                            // 指定输出目录
+                            .outputDir("D:/mapper/");
                 })
                 .packageConfig(builder -> {
-                    builder.parent("com.ssfw") // 设置父包名
-                            .moduleName("auth") // 设置父包模块名
-                            .pathInfo(Collections.singletonMap(OutputFile.xml, "D:/mapper/")); // 设置mapperXml生成路径
+                    // 设置父包名
+                    builder.parent("com.ssfw")
+                            // 设置父包模块名
+                            .moduleName("auth")
+                            // 设置mapperXml生成路径
+                            .pathInfo(Collections.singletonMap(OutputFile.xml, "D:/mapper/"));
                 })
                 .strategyConfig(builder -> {
-                    builder.addInclude("auth_user") // 设置需要生成的表名
-                            .addTablePrefix("auth", "t_"); // 设置过滤表前缀
+                    // 设置需要生成的表名
+                    builder.addInclude("auth_user")
+                            // 设置过滤表前缀
+                            .addTablePrefix("auth", "t_");
 
                 })
-                .templateEngine(new FreemarkerTemplateEngine()) // 使用Freemarker引擎模板，默认的是Velocity引擎模板
+                // 使用Freemarker引擎模板，默认的是Velocity引擎模板
+                .templateEngine(new FreemarkerTemplateEngine())
                 .execute();
     }
 }

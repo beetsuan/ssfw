@@ -5,12 +5,10 @@ import com.ssfw.auth.entity.UserEntity;
 import com.ssfw.auth.mapper.AuthUserRoleMapper;
 import com.ssfw.auth.service.AuthUserService;
 import com.ssfw.auth.dto.CustomUserDetails;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -41,7 +39,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
         UserEntity user = list.get(0);
         List<AuthRoleEntity> entities = authUserRoleMapper.listByUserId(user.getUserId());
-        final String role_ = "ROLE_";;
-        return new CustomUserDetails(user, entities.stream().map(role -> role_ +role.getRoleCode()).collect(Collectors.toList()));
+        final String rolePrefix = "ROLE_";;
+        return new CustomUserDetails(user, entities.stream().map(role -> rolePrefix +role.getRoleCode()).collect(Collectors.toList()));
     }
 }

@@ -8,6 +8,7 @@ import javax.servlet.http.HttpSession;
 
 /**
  * 验证码获取和验证
+ * @author beets
  */
 public class CaptchaWebAuthenticationDetails extends WebAuthenticationDetails {
 

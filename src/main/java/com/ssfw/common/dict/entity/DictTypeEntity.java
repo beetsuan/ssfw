@@ -33,13 +33,13 @@ public class DictTypeEntity implements Serializable {
 	/**
 	 * 字典ID
 	 */
-	@TableId(value = "dict_type_id", type = IdType.AUTO)
-	@EntityField("字典ID")
+	@TableId(value = "dict_type_id", type = IdType.INPUT)
+	@EntityField(value = "字典ID",isMain = true)
 	private String dictTypeId;
 	/**
 	 * 字典名称
 	 */
-	@EntityField("字典名称")
+	@EntityField(value = "字典名称",isMain = true)
 	private String dictTypeName;
 	/**
 	 * 级别

@@ -138,7 +138,7 @@ public class HttpsUtil {
     public static class SSLSocketFactoryImpl extends SSLSocketFactory {
 
         private final SSLContext sslContext = SSLContext.getInstance("SSL");
-        private TrustManager trustManager;
+        private final TrustManager trustManager;
 
 
         public SSLContext getSSLContext() {

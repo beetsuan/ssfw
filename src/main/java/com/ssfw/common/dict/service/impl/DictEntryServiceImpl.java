@@ -4,7 +4,7 @@ package com.ssfw.common.dict.service.impl;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.ssfw.common.dict.bizcheck.DictEntryBizCheck;
 import com.ssfw.common.framework.check.ValidStatus;
-import com.ssfw.common.framework.service.impl.CommonServiceImpl;
+import com.ssfw.common.framework.service.impl.BaseServiceImpl;
 import com.ssfw.common.log.annotation.ActionLog;
 import com.ssfw.common.log.constant.ActionTypeEnum;
 import org.springframework.stereotype.Service;
@@ -21,7 +21,7 @@ import java.util.List;
  * @date 2022-09-17 15:48:49
  */
 @Service
-public class DictEntryServiceImpl extends CommonServiceImpl<DictEntryMapper, DictEntryEntity> implements DictEntryService {
+public class DictEntryServiceImpl extends BaseServiceImpl<DictEntryMapper, DictEntryEntity> implements DictEntryService {
 
     @Override
     public ValidStatus<DictEntryEntity> getBizCheck() {

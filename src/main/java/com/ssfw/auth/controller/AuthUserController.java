@@ -1,19 +1,19 @@
 package com.ssfw.auth.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.ssfw.auth.assembler.AuthUserAssembler;
 import com.ssfw.auth.contant.UserConstants;
+import com.ssfw.auth.controller.cmd.UserCreateCmd;
+import com.ssfw.auth.controller.cmd.UserUpdateCmd;
 import com.ssfw.auth.entity.UserEntity;
-import com.ssfw.auth.mapper.AuthUserMapper;
 import com.ssfw.auth.service.AuthUserService;
 import com.ssfw.auth.util.LoginUserUtil;
-import com.ssfw.auth.ro.UserCreateRo;
-import com.ssfw.auth.vo.UserVo;
-import com.ssfw.auth.ro.UserUpdateRo;
 import com.ssfw.common.framework.controller.BaseController;
 import com.ssfw.common.framework.response.ResponseVo;
-import com.ssfw.common.util.LocalDateUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 /**
  * 用户 前端控制器
@@ -25,15 +25,18 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/do/auth/user")
 public class AuthUserController extends BaseController<UserEntity> {
 
+    /** 用户Service */
     private final AuthUserService service;
 
-    private final AuthUserMapper authUserMapper;
+    /**
+     * 对象转换
+     */
+    private final AuthUserAssembler assembler;
 
-    public AuthUserController(AuthUserService authUserService, AuthUserMapper authUserMapper) {
-
-        super(authUserService);
-        this.service = authUserService;
-        this.authUserMapper = authUserMapper;
+    public AuthUserController(AuthUserService service) {
+        super(service);
+        this.service = service;
+        this.assembler = AuthUserAssembler.INSTANCE;
     }
 
     /**
@@ -42,8 +45,8 @@ public class AuthUserController extends BaseController<UserEntity> {
      * @return ResponseVo
      */
     @GetMapping(value = "/get/{id}", produces= PRODUCE_UTF8_JSON)
-    public ResponseVo get(@PathVariable Integer id){
-        return ResponseVo.of(new UserVo().of(service.getById(id)));
+    public ResponseVo get(@PathVariable Long id){
+        return ResponseVo.ofData(assembler.entityToVO(service.getById(id)));
     }
 
     /**
@@ -63,52 +66,41 @@ public class AuthUserController extends BaseController<UserEntity> {
         if (StringUtils.isNotBlank(nickname)){
             wrapper.like(UserEntity::getNickname, nickname);
         }
-        return super.pageQuery(wrapper,new UserVo());
-    }
-
-    /**
-     * 查询用户 xml
-     * @param vo 用户模板
-     * @return
-     */
-    @RequestMapping(value = "/query",method = {RequestMethod.GET,RequestMethod.POST})
-    public ResponseVo query(UserVo vo){
-        vo.setTenantId(1);
-        return ResponseVo.success(authUserMapper.queryAll(vo));
+        return super.pageQuery(wrapper, assembler);
     }
 
 
     /**
-     * 新增用户
-     * @param vo 用户信息
-     * @return
+     *  新增用户
+     * @param command AuthUserCreateCmd
+     * @return json
      */
-    @PostMapping(value = "/add")
-    public ResponseVo add(UserCreateRo vo){
+    @PostMapping(value = "/create")
+    public ResponseVo create(@RequestBody @Valid UserCreateCmd command){
 
         request.getSession(true).setAttribute(UserConstants.SESSION_TENANT_ID,1);
-        UserEntity user = vo.toEntity();
-        user.setUseStatus(UserEntity.STATUS_VALID);
+        request.getSession(true).setAttribute(UserConstants.SESSION_USER_ID,1);
+        request.getSession(true).setAttribute(UserConstants.SESSION_NICK_NAME,"dsf");
 
-        return service.save(user) ? ResponseVo.success(vo) : ResponseVo.failureToAdd();
+
+        UserEntity entity = assembler.cmdToEntity(command);
+        entity.setUseStatus(UserEntity.STATUS_VALID);
+        entity.setTenantId(LoginUserUtil.getTenantId());
+
+        return service.save(entity) ? ResponseVo.success(assembler.entityToVO(entity)) : ResponseVo.failureToAdd();
+
     }
 
     /**
-     * 修改用户
-     * @param vo
-     * @return
+     *  修改用户
+     * @param command AuthUserUpdateCmd
+     * @return json
      */
     @PostMapping(value = "/update")
-    public ResponseVo update(UserUpdateRo vo){
+    public ResponseVo update(@RequestBody @Valid UserUpdateCmd command){
 
-        request.getSession(true).setAttribute(UserConstants.SESSION_TENANT_ID,1);
-        UserEntity user1 = service.getById(1);
-        UserEntity user = vo.toEntity();
-        if (service.updateById(user1)) {
-            return ResponseVo.success(new UserVo().of(user1));
-        }else{
-            return ResponseVo.failureToUpdate();
-        }
+        UserEntity entity = assembler.cmdToEntity(command);
+        return service.updateById(entity) ? ResponseVo.success(assembler.entityToVO(entity)) : ResponseVo.failureToUpdate();
     }
 
     /**
@@ -137,11 +129,9 @@ public class AuthUserController extends BaseController<UserEntity> {
             return ResponseVo.failure("目标用户id无效");
         }
         user.setUseStatus(status);
-        user.setUpdateUser(LoginUserUtil.getLoginNickname());
-        user.setUpdateDate(LocalDateUtil.nowLocalDateTime());
         service.updateById(user);
         if (service.updateById(user)) {
-            return ResponseVo.success(new UserVo().of(user));
+            return ResponseVo.success(assembler.entityToVO(user));
         }else{
             return ResponseVo.failure("修改失败");
         }

@@ -6,6 +6,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
  * sm3密码加密器
+ * @author beets
  */
 @Slf4j
 public class Sm3PasswordEncoder implements PasswordEncoder {

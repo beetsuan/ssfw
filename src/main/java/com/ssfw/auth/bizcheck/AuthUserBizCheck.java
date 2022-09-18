@@ -60,8 +60,6 @@ public class AuthUserBizCheck extends BaseBizCheck<UserEntity> {
             return this;
         }
         model.setUsername(dbEntity.getUsername());
-        model.setCreateUser(dbEntity.getCreateUser());
-        model.setCreateDate(dbEntity.getCreateDate());
 
 
         return this;

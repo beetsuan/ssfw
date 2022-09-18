@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * 登录失败的处理程序
+ * @author beets
  */
 @Slf4j
 public class CustomLoginFailureHandler implements AuthenticationFailureHandler, ApplicationEventPublisherAware {

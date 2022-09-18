@@ -3,22 +3,21 @@ package com.ssfw.common.env.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.ssfw.common.framework.controller.BaseController;
 import com.ssfw.common.framework.response.ResponseVo;
-import com.ssfw.common.util.StringUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import lombok.extern.slf4j.Slf4j;
+import com.ssfw.common.env.assembler.EnvPropertiesAssembler;
+import com.ssfw.common.env.controller.cmd.EnvPropertiesCreateCmd;
+import com.ssfw.common.env.controller.cmd.EnvPropertiesUpdateCmd;
 import com.ssfw.common.env.entity.EnvPropertiesEntity;
-import com.ssfw.common.env.ro.EnvPropertiesCreateRo;
-import com.ssfw.common.env.ro.EnvPropertiesUpdateRo;
 import com.ssfw.common.env.service.EnvPropertiesService;
-import com.ssfw.common.env.vo.EnvPropertiesVo;
 import javax.validation.Valid;
 
 /**
  * 环境配置Controller控制器
  *
  * @author <a href="hbq@a.com">hbq</a>
- * @date 2022-09-17 16:00:34
+ * @date 2022-09-18 15:05:09
  */
 @RestController
 @RequestMapping("/do/common/env/config")
@@ -27,10 +26,15 @@ public class EnvPropertiesController extends BaseController<EnvPropertiesEntity>
 
     /** 环境配置Service */
     private final EnvPropertiesService service;
+    /**
+    * 对象转换
+    */
+    private final EnvPropertiesAssembler assembler;
 
     public EnvPropertiesController(EnvPropertiesService service) {
         super(service);
         this.service = service;
+        this.assembler = EnvPropertiesAssembler.INSTANCE;
     }
 
 
@@ -39,7 +43,7 @@ public class EnvPropertiesController extends BaseController<EnvPropertiesEntity>
 	 */
     @GetMapping(value = "/get/{id}", produces= PRODUCE_UTF8_JSON)
     public ResponseVo get(@PathVariable Integer id){
-        return ResponseVo.of(new EnvPropertiesVo().of(service.getById(id)));
+        return ResponseVo.ofData(assembler.entityToVO(service.getById(id)));
     }
 
     /**
@@ -51,39 +55,42 @@ public class EnvPropertiesController extends BaseController<EnvPropertiesEntity>
     @RequestMapping(value = "/list",method = {RequestMethod.GET,RequestMethod.POST},produces= PRODUCE_UTF8_JSON)
     public ResponseVo list(String key,String title){
 
-        EnvPropertiesEntity entity = new EnvPropertiesEntity();
-        LambdaQueryWrapper<EnvPropertiesEntity> wrapper = new LambdaQueryWrapper<>(entity);
+        LambdaQueryWrapper<EnvPropertiesEntity> wrapper = new LambdaQueryWrapper<>();
         if (StringUtils.isNotEmpty(key)){
-            wrapper.like(EnvPropertiesEntity::getKey,key);
+            wrapper.like(EnvPropertiesEntity::getPropKey,key);
         }
         if (StringUtils.isNotEmpty(title)){
-            wrapper.like(EnvPropertiesEntity::getTitle,title);
+            wrapper.like(EnvPropertiesEntity::getPropTitle,title);
         }
-        return super.pageQuery(wrapper,new EnvPropertiesVo());
+
+        return super.pageQuery(wrapper, assembler);
     }
 
 
     /**
      *  新增环境配置
-     * @param vo EnvPropertiesVo
+     * @param command EnvPropertiesCreateCmd
      * @return json
      */
     @PostMapping(value = "/create")
-    public ResponseVo create(@RequestBody @Valid EnvPropertiesCreateRo vo){
+    public ResponseVo create(@RequestBody @Valid EnvPropertiesCreateCmd command){
 
-        return service.save(vo.toEntity()) ? ResponseVo.success(vo) : ResponseVo.failureToAdd();
+        EnvPropertiesEntity entity = assembler.cmdToEntity(command);
+        return service.save(entity) ? ResponseVo.success(assembler.entityToVO(entity)) : ResponseVo.failureToAdd();
+
     }
 
 
     /**
      *  修改环境配置
-     * @param vo EnvPropertiesUpdateRo
+     * @param command EnvPropertiesUpdateCmd
      * @return json
      */
     @PostMapping(value = "/update")
-    public ResponseVo update(@RequestBody @Valid EnvPropertiesUpdateRo vo){
+    public ResponseVo update(@RequestBody @Valid EnvPropertiesUpdateCmd command){
 
-        return service.updateById(vo.toEntity()) ? ResponseVo.success(vo) : ResponseVo.failureToUpdate();
+        EnvPropertiesEntity entity = assembler.cmdToEntity(command);
+        return service.updateById(entity) ? ResponseVo.success(assembler.entityToVO(entity)) : ResponseVo.failureToUpdate();
     }
 
     /**

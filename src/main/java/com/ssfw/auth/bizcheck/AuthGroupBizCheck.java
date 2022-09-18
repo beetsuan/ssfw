@@ -7,7 +7,7 @@ import com.ssfw.auth.service.AuthGroupService;
 import com.ssfw.common.util.StringUtil;
 
 /**
- * 用户小组check
+ * 用户小组 业务验证
  *
  * @author <a href="hbq@a.com">hbq</a>
  * @date 2022-09-15 17:19:00
@@ -27,7 +27,8 @@ public class AuthGroupBizCheck extends BaseBizCheck<AuthGroupEntity> {
     public AuthGroupBizCheck addable(AuthGroupEntity entity){
 
         String groupCode = entity.getGroupCode();
-        if (StringUtil.isNotNull(groupCode) && !service.query().eq("group_code", groupCode).list().isEmpty()) {
+        if (StringUtil.isNotNull(groupCode) && !service.lambdaQuery().eq(AuthGroupEntity::getGroupCode, groupCode)
+                .list().isEmpty()) {
             addError("小组编号重复");
         }
         return this;
